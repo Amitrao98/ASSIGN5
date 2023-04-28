@@ -1,0 +1,62 @@
+Question 1. What are the strengths and weaknesses of each option?
+
+Option A: Modify the Instructor dimension by adding special rows representing instructor teams. This approach can maintain the granularity of the fact table, making the instructor dimension match the grain of the fact table. However, this approach can create a large number of new rows in the Instructor dimension, and there may be ambiguity in determining which instructor is responsible for any issues that may arise, as instructor teams are responsible for the course. Also, queries that do not involve the instructor may require additional joins to resolve.
+
+Option B: Change the grain of the fact table to be one row per student enrollment per course per instructor. This approach can match the grain of the instructor dimension and make it possible to include the instructor dimension in the fact table. However, this approach will double the number of rows in the fact table, and it may be difficult to allocate enrollments equally among multiple instructors.
+
+Option C: Create two fact tables. The first has the grain of one row per student enrollment per course and doesn’t include the Instructor dimension. The second has the grain of one row per student enrollment per course per instructor and includes the Instructor dimension. This option can maintain the granularity of the fact table while avoiding the problem of having too many rows in the fact table. However, it may require users to be aware of which fact table to use for different queries.
+
+Question 2. Which option would you choose and why?
+
+I would choose Option C, as it can maintain the granularity of the fact table and allow users to choose the appropriate fact table for different queries. This option avoids the problems of having too many rows in the fact table and ambiguous instructor responsibility. Users can use the first fact table for queries that do not involve the instructor, and the second fact table for queries that involve the instructor. This option allows for flexibility and clarity in the design.
+
+Question 3. Would your answer to Question 2 be different if the majority of classes had multiple instructors? How about if only one or two classes had multiple instructors? (Explain your answer.)
+
+If the majority of classes had multiple instructors, Option B would be more suitable. This option can match the grain of the instructor dimension and make it possible to include the instructor dimension in the fact table, even when most classes have multiple instructors. On the other hand, if only one or two classes had multiple instructors, it might be feasible to use Option A, as the number of new rows in the Instructor dimension would not be excessive.
+
+Question 4. [OPTIONAL] Can you think of another reasonable alternative design besides Options A, B, and C? If so, what are the advantages and disadvantages of your alternative design?
+
+One possible alternative design is to create a bridge table between the fact table and the Instructor dimension. The bridge table can contain one row for each instructor for each course, linking the fact table to the Instructor dimension. This approach can maintain the granularity of the fact table and avoid ambiguity in determining instructor responsibility. However, this approach may require additional joins to resolve, and the bridge table can create a large number of rows, especially for classes with multiple instructors.
+
+
+Answer 5:
+Option A:
+Strengths:
+
+Simple to implement.
+Does not require additional dimension tables.
+Weaknesses:
+Historical data is lost when the scores change.
+Unable to analyze historical data by scores.
+Option B:
+Strengths:
+
+Historical data is preserved when scores change.
+Able to analyze historical data by scores.
+Weaknesses:
+Requires additional dimension tables and ETL processes.
+Increases the size of the Customer dimension.
+Option C:
+Strengths:
+
+Scores are stored in a separate dimension table.
+The number of rows in the dimension table is relatively small.
+Weaknesses:
+Unable to analyze historical data by customer.
+Unable to track changes in individual scores over time.
+Option D:
+Strengths:
+
+Scores are stored in a separate table.
+Able to analyze historical data by customer.
+Weaknesses:
+Requires an additional table and ETL processes.
+Increases the complexity of the data model.
+Answer 6:
+Based on the information provided, I would choose Option B. The ability to preserve historical data when scores change and analyze historical data by scores is essential for data analysis in an online brokerage company. While it requires additional dimension tables and ETL processes, it provides the most comprehensive view of the data.
+
+Answer 7:
+If the number of customers and/or the time interval between score recalculations was much larger, Option C might become more attractive. Since the number of rows in the dimension table is relatively small, it may be easier to maintain and query. However, if the time interval between score recalculations was much smaller, Option B would still be the best option. In this case, the additional ETL processes required for Option B would be justified to preserve historical data and enable more in-depth analysis.
+
+Answer 8:
+An alternative design could be to store scores as separate facts in the fact table. In this design, there would be separate fact tables for trades, customer activity scores, and customer profitability scores. Each fact table would have a foreign key to the Customer dimension table. This design would enable more flexibility in querying and analyzing the data but would also increase the complexity of the data model and require additional ETL processes.
